@@ -5,6 +5,7 @@
 require("./src/lib/cadesplugin_api");
 const {
   getCertsList,
+  getFirstValidCertificate,
   getCert,
   currentCadesCert,
   signBase64,
@@ -24,6 +25,7 @@ const cadespluginOnload = (async function cadespluginOnload() {
 
     return {
       getCertsList,
+      getFirstValidCertificate,
       getCert,
       currentCadesCert,
       signBase64,

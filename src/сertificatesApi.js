@@ -118,6 +118,28 @@ async function getCertsList() {
 
 /**
  * @async
+ * @function getFirstValidCertificate
+ * @throws {Error}
+ * @description получает первый валидный сертификат
+ */
+async function getFirstValidCertificate() {
+  try {
+    const certList = await getCertsList();
+
+    for (let index = 0; index < certList.length; index++) {
+      let isValid = await certList[index].certApi.IsValid();
+      if (isValid) {
+        return await certList[index];
+      }
+    }
+    throw new Error(`Нет сертификатов, подходящих для подписи`);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+/**
+ * @async
  * @function currentCadesCert
  * @param {String} thumbprint значение сертификата
  * @throws {Error}
@@ -333,6 +355,7 @@ async function signXml(thumbprint, xml, cadescomXmlSignatureType = CADESCOM_XML_
 module.exports = {
   about,
   getCertsList,
+  getFirstValidCertificate,
   currentCadesCert,
   getCert,
   signXml,
