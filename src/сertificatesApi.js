@@ -127,11 +127,14 @@ async function getFirstValidCertificate() {
     const certList = await getCertsList();
 
     for (let index = 0; index < certList.length; index++) {
-      let isValid = await certList[index].certApi.IsValid();
+      let validation = await certList[index].certApi.IsValid();
+      let isValid = await validation.Result;
+
       if (isValid) {
         return await certList[index];
       }
     }
+
     throw new Error(`Нет сертификатов, подходящих для подписи`);
   } catch (error) {
     throw new Error(error.message);
