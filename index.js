@@ -10,6 +10,7 @@ const {
   signBase64,
   verifyBase64,
   signXml,
+  signFile,
   about
 } = require("./src/сertificatesApi");
 
@@ -28,6 +29,7 @@ const cadespluginOnload = (async function cadespluginOnload() {
       signBase64,
       verifyBase64,
       signXml,
+      signFile,
       about,
     };
   } catch (error) {
