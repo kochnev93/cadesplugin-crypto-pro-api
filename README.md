@@ -1,4 +1,4 @@
-# cadesplugin-api
+# async-cadesplugin
 
 Библиотека предоставляет API для работы c cadesplugin и Крипто Про
 
@@ -6,9 +6,9 @@
 
 ## Install
 
-`npm i cadesplugin-api`
+`npm i async-cadesplugin`
 
-`yarn add cadesplugin-api`
+`yarn add async-cadesplugin`
 
 ## API
 
@@ -75,7 +75,7 @@
 ## Usage
 
 ```js
-import getCadespluginAPI from 'cadesplugin-api';
+import getCadespluginAPI from 'async-cadesplugin';
 
 /**
  * @async

@@ -1,5 +1,5 @@
 {
-  "name": "cadesplugin-api",
+  "name": "async-cadesplugin",
   "version": "0.9.7",
   "description": "Библиотека для работы с API cadesplugin",
   "main": "index.js",
