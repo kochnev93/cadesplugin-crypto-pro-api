@@ -139,6 +139,7 @@ CertificateAdjuster.possibleInfo = function possibleInfo(subjectIssuer) {
  * @param {String} date строка с датой
  * @returns {Object}
  * @description формирует дату от переданного параметра
+ * @todo padStart 2
  */
 CertificateAdjuster.friendlyDate = function friendlyDate(date) {
   const newDate = new Date(date);
