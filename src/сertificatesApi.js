@@ -95,8 +95,7 @@ async function getCertsList() {
         try {
           const certApi = await findCertsWithPrivateKey.Item(index + 1);
 
-          const сertificateAdjuster = Object.create(CertificateAdjuster);
-          сertificateAdjuster.init({
+          const сertificateAdjuster = new CertificateAdjuster({
             certApi,
             issuerInfo: await certApi.IssuerName,
             privateKey: await certApi.PrivateKey,
