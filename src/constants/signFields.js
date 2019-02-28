@@ -1,3 +1,6 @@
+/**
+ * @constant {Object} Справочник общих полей в подписи
+ */
 export const COMMON_FIELDS = {
   'UnstructuredName=': 'Неструктурированное имя',
   'E=': 'Email',
@@ -17,6 +20,9 @@ export const COMMON_FIELDS = {
   'OGRN=': 'ОГРН',
 };
 
+/**
+ * @constant {Object} Справочник полей SUBJECT
+ */
 export const SUBJECT_FIELDS = {
   'SN=': 'Фамилия',
   'G=': 'Имя/Отчество',
@@ -24,6 +30,9 @@ export const SUBJECT_FIELDS = {
   'OU=': 'Отдел/подразделение',
 };
 
+/**
+ * @constant {Object} Справочник полей ISSUER
+ */
 export const ISSUER_FIELDS = {
   'CN=': 'Удостоверяющий центр',
   'OU=': 'Тип',

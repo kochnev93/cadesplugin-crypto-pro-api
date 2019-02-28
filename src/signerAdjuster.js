@@ -4,6 +4,9 @@ import {
     SUBJECT_FIELDS
 } from './constants/signFields';
 
+/**
+ * @description объект, в котором собираются данные о подписчике в подписи и методы по работе с этими данными
+ */
 class SignerAdjuster {
     constructor(data) {
         const {

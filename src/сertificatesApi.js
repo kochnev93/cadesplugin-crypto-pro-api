@@ -9,7 +9,7 @@ import {
   doXmlSitnatureAlgorithm,
   doXmlSitnatureType
 } from './xmlSitnatureMethods';
-import constants from './constants';
+import * as constants from './constants';
 
 const {
   CAPICOM: {

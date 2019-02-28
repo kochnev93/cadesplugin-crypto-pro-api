@@ -4,6 +4,9 @@ import {
   SUBJECT_FIELDS
 } from './constants/signFields';
 
+/**
+ * @description объект, в котором собираются данные о сертификате и методы по работе с этими данными
+ */
 class CertificateAdjuster {
   constructor(data) {
     const {
@@ -14,7 +17,7 @@ class CertificateAdjuster {
       thumbprint,
       subjectInfo,
       validPeriod
-    } = currentCert;
+    } = data;
 
     this.certApi = certApi;
     this.issuerInfo = issuerInfo;
