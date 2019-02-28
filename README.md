@@ -1,10 +1,14 @@
-# cadesplugin-crypto-pro-api
+# async-cadesplugin
 
 Библиотека предоставляет API для работы c cadesplugin и Крипто Про
 
+Форк библиотеки [cadesplugin-crypto-pro-api](https://github.com/smodean/cadesplugin-crypto-pro-api)
+
 ## Install
 
-npm i cadesplugin-crypto-pro-api
+`npm i async-cadesplugin`
+
+`yarn add async-cadesplugin`
 
 ## API
 
@@ -15,6 +19,10 @@ npm i cadesplugin-crypto-pro-api
 ### getCertsList()
 
 Получает массив валидных сертификатов
+
+### getFirstValidCertificate()
+
+Получает первый валидный сертификат
 
 ### currentCadesCert(thumbprint)
 
@@ -32,6 +40,10 @@ npm i cadesplugin-crypto-pro-api
 ### signXml(thumbprint, xml, cadescomXmlSignatureType)
 
 Подписать строку в формате XML
+
+### verifyBase64(signedMessage, base64)
+
+Проверка подписи строки в формате base64
 
 ## Custom certs format API
 
@@ -63,50 +75,27 @@ npm i cadesplugin-crypto-pro-api
 ## Usage
 
 ```js
-import ccpa from 'cadesplugin-crypto-pro-api';
+import getCadespluginAPI from 'async-cadesplugin';
 
 /**
  * @async
- * @function doCertsList
- * @description формирует массив сертификатов с оригинальными значениями
+ * @function sign
+ * @description пример создания подписи
  */
-async function doCertsList() {
-  const certsApi = await ccpa;
-  const certsList = await certsApi.getCertsList();
+async function sign() {
+  try {
+    const base64DataToSign = btoa('Hello world');
+    const api = await getCadespluginAPI();
+    const certificate = await api.getFirstValidCertificate();
+    const signature = await api.signBase64(certificate.thumbprint, base64DataToSign);
 
-  return certsList;
-}
-
-/**
- * @async
- * @function doFriendlyCustomCertsList
- * @description формирует массив сертификатов с кастомными полями
- */
-async function doFriendlyCustomCertsList() {
-  const certsApi = await ccpa;
-  const certsList = await certsApi.getCertsList();
-
-  const friendlyCertsList = certsList.map(cert => {
-    const friendlySubjectInfo = cert.friendlySubjectInfo();
-    const friendlyIssuerInfo = cert.friendlyIssuerInfo();
-    const friendlyValidPeriod = cert.friendlyValidPeriod();
-    const {
-      to: { ddmmyy, hhmmss }
-    } = friendlyValidPeriod;
-
-    return {
-      subjectInfo: friendlySubjectInfo,
-      issuerInfo: friendlyIssuerInfo,
-      validPeriod: friendlyValidPeriod,
-      thumbprint: cert.thumbprint,
-      title: `${
-        friendlySubjectInfo.filter(el => el.value === 'Владелец')[0].text
-      }. Сертификат действителен до: ${ddmmyy} ${hhmmss}`
-    };
-  });
+    console.log(signature);
+  } catch (error) {
+    console.log(error.message);
+  }
 }
 ```
 
 ### License
 
-MIT © [Denis Smorodin](https://github.com/smodean)
+MIT ©
