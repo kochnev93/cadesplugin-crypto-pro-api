@@ -2,8 +2,8 @@
 // NOTE Imports
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-require("./src/lib/cadesplugin_api");
-const {
+import "./src/lib/cadesplugin_api";
+import {
   getCertsList,
   getFirstValidCertificate,
   getCert,
@@ -12,8 +12,11 @@ const {
   verifyBase64,
   signXml,
   signFile,
-  about
-} = require("./src/сertificatesApi");
+  about,
+  getSignatureInfo,
+  getHash,
+  signHash,
+} from "./src/сertificatesApi";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // NOTE cadesplugin await function
@@ -33,6 +36,9 @@ const cadespluginOnload = (async function cadespluginOnload() {
       signXml,
       signFile,
       about,
+      getSignatureInfo,
+      getHash,
+      signHash,
     };
   } catch (error) {
     throw new Error(error);
@@ -43,4 +49,4 @@ const cadespluginOnload = (async function cadespluginOnload() {
 // NOTE Exports
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-module.exports = cadespluginOnload;
+export default cadespluginOnload;

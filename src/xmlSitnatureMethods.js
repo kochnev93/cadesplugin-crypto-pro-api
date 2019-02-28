@@ -46,7 +46,7 @@ function template(signAlgorithm) {
  * @throws {Error}
  * @description выбирает значение константы для типа подписи XML документа
  */
-function doXmlSitnatureType(CADESCOM_XML_SIGNATURE_TYPE) {
+const doXmlSitnatureType = function doXmlSitnatureType(CADESCOM_XML_SIGNATURE_TYPE) {
   switch (CADESCOM_XML_SIGNATURE_TYPE) {
     case 0:
       // Вложенная подпись
@@ -76,7 +76,7 @@ function doXmlSitnatureType(CADESCOM_XML_SIGNATURE_TYPE) {
  * @throws {Error}
  * @description определяет алгоритм подписания XML документа в зависимости от алгоритма сертификата
  */
-function doXmlSitnatureAlgorithm(value) {
+const doXmlSitnatureAlgorithm = function doXmlSitnatureAlgorithm(value) {
   switch (value) {
     case '1.2.643.2.2.19':
       // алгоритм ГОСТ Р 34.10-2001
@@ -99,7 +99,7 @@ function doXmlSitnatureAlgorithm(value) {
 // NOTE Exports
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-module.exports = {
+export {
   doXmlSitnatureType,
   doXmlSitnatureAlgorithm,
-};
+}

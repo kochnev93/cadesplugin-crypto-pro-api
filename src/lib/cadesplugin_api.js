@@ -1,4 +1,4 @@
-(function() {
+(function () {
   //already loaded
   if (window.cadesplugin) return;
 
@@ -15,7 +15,7 @@
   var cadesplugin;
 
   if (canPromise) {
-    cadesplugin = new Promise(function(resolve, reject) {
+    cadesplugin = new Promise(function (resolve, reject) {
       plugin_resolve = resolve;
       plugin_reject = reject;
     });
@@ -369,7 +369,7 @@
   function call_ru_cryptopro_npcades_10_native_bridge(functionName, array) {
     var tmpobj;
     var ex;
-    ru_cryptopro_npcades_10_native_bridge.call(functionName, array, function(e, response) {
+    ru_cryptopro_npcades_10_native_bridge.call(functionName, array, function (e, response) {
       ex = e;
       var str = 'tmpobj=' + response;
       eval(str);
@@ -395,12 +395,12 @@
         "<p><a href='https://www.cryptopro.ru/sites/default/files/products/cades/extensions/firefox_cryptopro_extension_latest.xpi'>Скачать расширение</a></p>" +
         '</div>';
       document.getElementsByTagName('Body')[0].appendChild(ovr);
-      document.getElementById('cadesplugin_close_install').addEventListener('click', function() {
+      document.getElementById('cadesplugin_close_install').addEventListener('click', function () {
         plugin_loaded_error('Плагин недоступен');
         document.getElementById('cadesplugin_ovr').style.visibility = 'hidden';
       });
 
-      ovr.addEventListener('click', function() {
+      ovr.addEventListener('click', function () {
         plugin_loaded_error('Плагин недоступен');
         document.getElementById('cadesplugin_ovr').style.visibility = 'hidden';
       });
@@ -412,7 +412,7 @@
   //Если установленна переменная cadesplugin_skip_extension_install - не предлагаем установить расширение
   function install_opera_extension() {
     if (!window.cadesplugin_skip_extension_install) {
-      document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener('DOMContentLoaded', function () {
         var ovr = document.createElement('div');
         ovr.id = 'cadesplugin_ovr';
         ovr.style =
@@ -425,28 +425,28 @@
           '</div>';
         document.getElementsByTagName('Body')[0].appendChild(ovr);
         var btn_install = document.getElementById('cadesplugin_install');
-        btn_install.addEventListener('click', function(event) {
+        btn_install.addEventListener('click', function (event) {
           // eslint-disable-next-line no-undef
           opr.addons.installExtension(
             'epebfcehmdedogndhlcacafjaacknbcm', // eslint-disable-line no-undef
-            function() {
+            function () {
               document.getElementById('cadesplugin_ovr').style.visibility = 'hidden';
               location.reload(); // eslint-disable-line no-restricted-globals
             },
-            function() {}
+            function () {}
           );
         });
-        document.getElementById('cadesplugin_close_install').addEventListener('click', function() {
+        document.getElementById('cadesplugin_close_install').addEventListener('click', function () {
           plugin_loaded_error('Плагин недоступен');
           document.getElementById('cadesplugin_ovr').style.visibility = 'hidden';
         });
 
-        ovr.addEventListener('click', function() {
+        ovr.addEventListener('click', function () {
           plugin_loaded_error('Плагин недоступен');
           document.getElementById('cadesplugin_ovr').style.visibility = 'hidden';
         });
         ovr.style.visibility = 'visible';
-        document.getElementById('cadesplugin_ovr_item').addEventListener('click', function(e) {
+        document.getElementById('cadesplugin_ovr_item').addEventListener('click', function (e) {
           e.stopPropagation();
         });
       });
@@ -463,7 +463,7 @@
     window.postMessage('cadesplugin_echo_request', '*');
     window.addEventListener(
       'message',
-      function(event) {
+      function (event) {
         if (typeof event.data !== 'string' || !event.data.match('cadesplugin_loaded')) return;
         if (isFireFox || isEdge) {
           // Для Firefox вместе с сообщением cadesplugin_loaded прилетает url для загрузки nmcades_plugin_api.js
@@ -615,7 +615,7 @@
     } else if (!canPromise) {
       window.addEventListener(
         'message',
-        function(event) {
+        function (event) {
           if (event.data !== 'cadesplugin_echo_request') return;
           load_npapi_plugin();
           check_npapi_plugin();
@@ -629,7 +629,7 @@
       } else {
         window.addEventListener(
           'load',
-          function(event) {
+          function (event) {
             load_npapi_plugin();
             check_npapi_plugin();
           },

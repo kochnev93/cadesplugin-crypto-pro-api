@@ -23,6 +23,8 @@ cadesMethods.init = function init(args) {
   this.O_SIGNER = args.O_SIGNER;
   this.O_SIGNED_XML = args.O_SIGNED_XML;
   this.O_ABOUT = args.O_ABOUT;
+  this.O_RAW_SIGNATURE = args.O_RAW_SIGNATURE;
+  this.O_HASHED_DATA = args.O_HASHED_DATA;
 };
 
 /**
@@ -33,9 +35,9 @@ cadesMethods.init = function init(args) {
  * @description выбирает доступный метод для текущего браузера
  */
 cadesMethods.createObject = async function createObject(method) {
-  const supportedMethod = (await window.cadesplugin.CreateObject)
-    ? await window.cadesplugin.CreateObject(method)
-    : await window.cadesplugin.CreateObjectAsync(method);
+  const supportedMethod = (await window.cadesplugin.CreateObject) ?
+    await window.cadesplugin.CreateObject(method) :
+    await window.cadesplugin.CreateObjectAsync(method);
 
   return supportedMethod;
 };
@@ -88,6 +90,23 @@ cadesMethods.oSignedXml = function oSignedXml() {
 cadesMethods.oAbout = function oAbout() {
   return this.createObject(this.O_ABOUT);
 };
+/**
+ * @method oRawSignature
+ * @returns {Object}
+ * @description возвращает созданный объект
+ */
+cadesMethods.oRawSignature = function oRawSignature() {
+  return this.createObject(this.O_RAW_SIGNATURE);
+};
+/**
+ * @method oAbout
+ * @returns {Object}
+ * @description возвращает созданный объект
+ * @see http://cpdn.cryptopro.ru/?url=/content/cades/class_c_ad_e_s_c_o_m_1_1_c_p_signers.html
+ */
+cadesMethods.oHashedData = function oHashedData() {
+  return this.createObject(this.O_HASHED_DATA);
+};
 
 const cadescomMethods = Object.create(cadesMethods);
 
@@ -98,10 +117,12 @@ cadescomMethods.init({
   O_SIGNER: 'CAdESCOM.CPSigner',
   O_SIGNED_XML: 'CAdESCOM.SignedXML',
   O_ABOUT: 'CAdESCOM.About',
+  O_RAW_SIGNATURE: 'CAdESCOM.RawSignature',
+  O_HASHED_DATA: 'CAdESCOM.HashedData',
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // NOTE Exports
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-module.exports = cadescomMethods;
+export default cadescomMethods;
