@@ -29,7 +29,6 @@ const {
     CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_512,
     CADESCOM_CADES_BES,
     CADESCOM_XML_SIGNATURE_TYPE_ENVELOPED,
-    CADESCOM_AUTHENTICATED_ATTRIBUTE_DOCUMENT_NAME,
   },
 } = constants;
 
@@ -54,7 +53,7 @@ async function about() {
  * @async
  * @function getCertsList
  * @throws {Error}
- * @description получает массив валидных сертификатов
+ * @description получает массив активных сертификатов
  */
 async function getCertsList() {
   try {
@@ -118,6 +117,32 @@ async function getCertsList() {
     oStore.Close();
 
     return createCertList;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+/**
+ * @async
+ * @function getValidCertificates
+ * @throws {Error}
+ * @description получает все валидные сертификаты
+ */
+async function getValidCertificates() {
+  try {
+    const certList = await getCertsList();
+    const validCertificates = [];
+
+    for (let index = 0; index < certList.length; index++) {
+      let validation = await certList[index].certApi.IsValid();
+      let isValid = await validation.Result;
+
+      if (isValid) {
+        validCertificates.push(certList[index]);
+      }
+    }
+
+    return validCertificates;
   } catch (error) {
     throw new Error(error.message);
   }
@@ -493,6 +518,7 @@ async function signXml(thumbprint, xml, cadescomXmlSignatureType = CADESCOM_XML_
 export {
   about,
   getCertsList,
+  getValidCertificates,
   getFirstValidCertificate,
   currentCadesCert,
   getCert,

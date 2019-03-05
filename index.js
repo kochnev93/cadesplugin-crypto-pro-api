@@ -5,6 +5,7 @@
 import "./src/lib/cadesplugin_api";
 import {
   getCertsList,
+  getValidCertificates,
   getFirstValidCertificate,
   getCert,
   currentCadesCert,
@@ -28,6 +29,7 @@ const cadespluginOnload = (async function cadespluginOnload() {
 
     return {
       getCertsList,
+      getValidCertificates,
       getFirstValidCertificate,
       getCert,
       currentCadesCert,
