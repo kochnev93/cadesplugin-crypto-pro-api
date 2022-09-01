@@ -1,16 +1,15 @@
 {
-  "name": "async-cadesplugin",
-  "version": "0.9.9",
-  "description": "Библиотека для работы с API cadesplugin",
+  "name": "async-cadesplugin-extended",
+  "version": "1.0.0",
+  "description": "Библиотека предоставляет API для работы c cadesplugin и Крипто Про",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "mrr000 <mahmutovrinat@ya.ru>",
-  "contributors": [
-    "smodean <smodean73@gmail.com>"
-  ],
-  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DahkovAV/cadesplugin-crypto-pro-api.git"
+  },
   "keywords": [
     "cadesplugin",
     "Крипто Про",
@@ -20,10 +19,14 @@
     "Электонная подпись",
     "Электронная цифровая подпись",
     "cadesplugin-crypto-pro-api",
-    "cadesplugin-api"
+    "cadesplugin-api",
+    "GOST_3411_2012_512",
+    "GOST_3411_2012_256"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/mrr000/cadesplugin-crypto-pro-api"
-  }
+  "author": "chameleonio <elchameleonio@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DahkovAV/cadesplugin-crypto-pro-api/issues"
+  },
+  "homepage": "https://github.com/DahkovAV/cadesplugin-crypto-pro-api#readme"
 }
