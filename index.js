@@ -16,7 +16,10 @@ import {
   about,
   getSignatureInfo,
   getHash,
-  signHash,
+  signHash256,
+  signHash512,
+  coSignHash512,
+  coSignHash256
 } from "./src/сertificatesApi";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -40,7 +43,10 @@ const cadespluginOnload = (async function cadespluginOnload() {
       about,
       getSignatureInfo,
       getHash,
-      signHash,
+      signHash256,
+      signHash512,
+      coSignHash512,
+      coSignHash256
     };
   } catch (error) {
     throw new Error(error);

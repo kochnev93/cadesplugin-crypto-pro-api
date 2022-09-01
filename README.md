@@ -36,9 +36,21 @@
 
 Получает хэш по алгоритму GOST_3411_2012_512
 
-### signHash()
+### signHash512(thumbprint, hash, signOption)
 
 Подписывает хэш полученный по алгоритму GOST_3411_2012_512
+
+### coSignHash512(thumbprint, hash, signature, signOption)
+
+Добавление параллельной подписи по алгоритму GOST_3411_2012_512
+
+### signHash256(thumbprint, hash, signOption)
+
+Подписывает хэш полученный по алгоритму GOST_3411_2012_256
+
+### coSignHash256(thumbprint, hash, signature, signOption)
+
+Добавление параллельной подписи по алгоритму GOST_3411_2012_256
 
 ### getCert(thumbprint)
 
@@ -56,6 +68,10 @@
 ### verifyBase64(signedMessage, base64)
 
 Проверка подписи строки в формате base64
+
+### signFile(thumbprint, base64, type, signOption)
+
+Подпись файла в формате base64
 
 ## Custom certs format API
 
