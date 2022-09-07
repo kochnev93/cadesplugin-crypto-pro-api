@@ -1,6 +1,6 @@
 # async-cadesplugin-extended
 
-Библиотека предоставляет API для работы c cadesplugin и Крипто Про
+Библиотека предоставляет hасширенный функционал API для работы с cadesplugin
 
 Форк библиотеки [cadesplugin-crypto-pro-api](https://github.com/smodean/cadesplugin-crypto-pro-api)
 
@@ -12,7 +12,7 @@
 
 ### about()
 
-Выводит информацию о верисии плагина и так далее
+Выводит информацию о верисии плагина
 
 ### getCertsList()
 
@@ -30,7 +30,7 @@
 
 Получает сертификат по thumbprint значению сертификата
 
-### getHash()
+### getHash(base64)
 
 Получает хэш по алгоритму GOST_3411_2012_512
 
@@ -108,7 +108,6 @@
 
 Возвращает распаршенную информацию о строке issuer
 
-
 ## Usage
 
 ```js
@@ -116,10 +115,10 @@ import getCadespluginAPI from 'async-cadesplugin';
 
 /**
  * @async
- * @function sign
- * @description пример создания подписи
+ * @function signString
+ * @description пример создания подписи строки
  */
-async function sign() {
+async function signString() {
   try {
     const base64DataToSign = btoa('Hello world');
     const api = await getCadespluginAPI();
@@ -131,6 +130,66 @@ async function sign() {
     console.log(error.message);
   }
 }
+
+/**
+ * @async
+ * @function signFile
+ * @description пример создания подписи файла
+ */
+async function signFile() {
+  try {
+    const fileToBase64 = 'SGVsbG8gd29ybGQh'; // файл в base64
+    const api = await getCadespluginAPI();
+    const certificate = await api.getFirstValidCertificate();
+    const signature = await api.signFile(certificate.thumbprint, fileToBase64, true, 1);
+    // true=откреплённая подпись false=прикреплённая подпись.
+    // 0 CAPICOM_CERTIFICATE_INCLUDE_CHAIN_EXCEPT_ROOT Сохраняет все сертификаты цепочки за исключением корневого.
+    // 1 CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN Сохраняет полную цепочку.
+    // 2 CAPICOM_CERTIFICATE_INCLUDE_END_ENTITY_ONLY Сертификат включает только конечное лицо
+    console.log(signature);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+/**
+ * @async
+ * @function signFileHash512
+ * @description пример создания подписи хэша файла
+ */
+async function signFileHash512() {
+  try {
+    const fileHash = '2EB8457BFCCC3897D180CB3964996CF96F27DCC4E6B900CC35E4974E8AD8D7D9D1E70798B07879A7ABBFFFCA1B565D3F943E8DD0D1F1B3E525CDB5F2C2BBE4DF'; // хэш файла по алгоритму ГОСТ Р 34.11-2012 с длиной 512 бит
+    const api = await getCadespluginAPI();
+    const certificate = await api.getFirstValidCertificate(); // Для корректной работы необходим алгоритм хэширования ключа, аналогичный хэшу файла (в данном случае 512 бит)
+    const signature = await api.signHash512(certificate.thumbprint, fileHash, 1);
+    // 0 CAPICOM_CERTIFICATE_INCLUDE_CHAIN_EXCEPT_ROOT Сохраняет все сертификаты цепочки за исключением корневого.
+    // 1 CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN Сохраняет полную цепочку.
+    // 2 CAPICOM_CERTIFICATE_INCLUDE_END_ENTITY_ONLY Сертификат включает только конечное лицо
+    console.log(signature);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+/**
+ * @async
+ * @function coSignFileHash512
+ * @description пример создания параллельной подписи хэша файла
+ */
+async function coSignFileHash512() {
+  try {
+    const fileHash = '2EB8457BFCCC3897D180CB3964996CF96F27DCC4E6B900CC35E4974E8AD8D7D9D1E70798B07879A7ABBFFFCA1B565D3F943E8DD0D1F1B3E525CDB5F2C2BBE4DF'; // хэш файла по алгоритму ГОСТ Р 34.11-2012 с длиной 512 бит
+    const api = await getCadespluginAPI();
+    const prevSignature = '---'; // Значение предыдущей подписи
+    const certificate = await api.getFirstValidCertificate();
+    const signature = await api.coSignHash512(certificate.thumbprint, fileHash, prevSignature, 1);
+    console.log(signature);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 ```
 
 ### License

@@ -1,7 +1,7 @@
 {
   "name": "async-cadesplugin-extended",
-  "version": "1.0.0",
-  "description": "Библиотека предоставляет API для работы c cadesplugin и Крипто Про",
+  "version": "1.0.2",
+  "description": "Расширенный функционал API для работы с cadesplugin",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
