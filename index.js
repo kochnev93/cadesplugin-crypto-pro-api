@@ -19,14 +19,16 @@ import {
   signHash256,
   signHash512,
   coSignHash512,
-  coSignHash256
+  coSignHash256,
+  signHash,
+  getHashByParts,
 } from "./src/сertificatesApi";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // NOTE cadesplugin await function
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const cadespluginOnload = (async function cadespluginOnload() {
+const cadespluginOnload = async function cadespluginOnload() {
   try {
     await window.cadesplugin;
 
@@ -46,12 +48,14 @@ const cadespluginOnload = (async function cadespluginOnload() {
       signHash256,
       signHash512,
       coSignHash512,
-      coSignHash256
+      coSignHash256,
+      signHash,
+      getHashByParts,
     };
   } catch (error) {
     throw new Error(error);
   }
-});
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // NOTE Exports
