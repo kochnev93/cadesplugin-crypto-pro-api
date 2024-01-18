@@ -2,14 +2,14 @@
 // NOTE Imports
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import SignerAdjuster from './signerAdjuster';
-import CertificateAdjuster from './сertificateAdjuster';
-import cadescomMethods from './cadescomMethods';
+import SignerAdjuster from "./signerAdjuster";
+import CertificateAdjuster from "./сertificateAdjuster";
+import cadescomMethods from "./cadescomMethods";
 import {
   doXmlSitnatureAlgorithm,
-  doXmlSitnatureType
-} from './xmlSitnatureMethods';
-import * as constants from './constants';
+  doXmlSitnatureType,
+} from "./xmlSitnatureMethods";
+import * as constants from "./constants";
 
 const {
   CAPICOM: {
@@ -59,15 +59,21 @@ async function about() {
 async function getCertsList() {
   try {
     const oStore = await cadescomMethods.oStore();
-    await oStore.Open(CAPICOM_CURRENT_USER_STORE, CAPICOM_MY_STORE, CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED);
+    await oStore.Open(
+      CAPICOM_CURRENT_USER_STORE,
+      CAPICOM_MY_STORE,
+      CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED
+    );
 
     const certificates = await oStore.Certificates;
 
     if (!certificates) {
-      throw new Error('Нет доступных сертификатов');
+      throw new Error("Нет доступных сертификатов");
     }
 
-    const findCertificate = await certificates.Find(CAPICOM_CERTIFICATE_FIND_TIME_VALID);
+    const findCertificate = await certificates.Find(
+      CAPICOM_CERTIFICATE_FIND_TIME_VALID
+    );
     const findCertsWithPrivateKey = await findCertificate.Find(
       CAPICOM_CERTIFICATE_FIND_EXTENDED_PROPERTY,
       CAPICOM_PROPID_KEY_PROV_INFO
@@ -76,7 +82,7 @@ async function getCertsList() {
     const count = await findCertsWithPrivateKey.Count;
 
     if (!count) {
-      throw new Error('Нет сертификатов с приватным ключём');
+      throw new Error("Нет сертификатов с приватным ключём");
     }
 
     const countArray = Array(count).fill(null);
@@ -110,7 +116,9 @@ async function getCertsList() {
 
           return сertificateAdjuster;
         } catch (error) {
-          throw new Error(`При переборе сертификатов произошла ошибка: ${error.message}`);
+          throw new Error(
+            `При переборе сертификатов произошла ошибка: ${error.message}`
+          );
         }
       })
     );
@@ -184,24 +192,33 @@ async function getFirstValidCertificate() {
 async function currentCadesCert(thumbprint) {
   try {
     if (!thumbprint) {
-      throw new Error('Не указано thumbprint значение сертификата');
-    } else if (typeof thumbprint !== 'string') {
-      throw new Error('Не валидное значение thumbprint сертификата');
+      throw new Error("Не указано thumbprint значение сертификата");
+    } else if (typeof thumbprint !== "string") {
+      throw new Error("Не валидное значение thumbprint сертификата");
     }
     const oStore = await cadescomMethods.oStore();
 
-    await oStore.Open(CAPICOM_CURRENT_USER_STORE, CAPICOM_MY_STORE, CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED);
+    await oStore.Open(
+      CAPICOM_CURRENT_USER_STORE,
+      CAPICOM_MY_STORE,
+      CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED
+    );
 
     const certificates = await oStore.Certificates;
     const count = await certificates.Count;
-    const findCertificate = await certificates.Find(CAPICOM_CERTIFICATE_FIND_SHA1_HASH, thumbprint);
+    const findCertificate = await certificates.Find(
+      CAPICOM_CERTIFICATE_FIND_SHA1_HASH,
+      thumbprint
+    );
     if (count) {
       const certificateItem = await findCertificate.Item(1);
       oStore.Close();
 
       return certificateItem;
     } else {
-      throw new Error(`Произошла ошибка при получении вертификата по thumbprint значению: ${thumbprint}`);
+      throw new Error(
+        `Произошла ошибка при получении вертификата по thumbprint значению: ${thumbprint}`
+      );
     }
   } catch (error) {
     throw new Error(error.message);
@@ -221,9 +238,9 @@ async function currentCadesCert(thumbprint) {
 async function getCert(thumbprint) {
   try {
     if (!thumbprint) {
-      throw new Error('Не указано thumbprint значение сертификата');
-    } else if (typeof thumbprint !== 'string') {
-      throw new Error('Не валидное значение thumbprint сертификата');
+      throw new Error("Не указано thumbprint значение сертификата");
+    } else if (typeof thumbprint !== "string") {
+      throw new Error("Не валидное значение thumbprint сертификата");
     }
 
     const certList = await getCertsList();
@@ -234,7 +251,9 @@ async function getCert(thumbprint) {
       }
     }
 
-    throw new Error(`Не найдено сертификата по thumbprint значению: ${thumbprint}`);
+    throw new Error(
+      `Не найдено сертификата по thumbprint значению: ${thumbprint}`
+    );
   } catch (error) {
     throw new Error(error.message);
   }
@@ -253,12 +272,17 @@ async function getCert(thumbprint) {
  * @throws {Error}
  * @description подпись строки в формате base64
  */
-async function signBase64(thumbprint, base64, type = true, signOption = CAPICOM_CERTIFICATE_INCLUDE_END_ENTITY_ONLY) {
+async function signBase64(
+  thumbprint,
+  base64,
+  type = true,
+  signOption = CAPICOM_CERTIFICATE_INCLUDE_END_ENTITY_ONLY
+) {
   try {
     if (!thumbprint) {
-      throw new Error('Не указано thumbprint значение сертификата');
-    } else if (typeof thumbprint !== 'string') {
-      throw new Error('Не валидное значение thumbprint сертификата');
+      throw new Error("Не указано thumbprint значение сертификата");
+    } else if (typeof thumbprint !== "string") {
+      throw new Error("Не валидное значение thumbprint сертификата");
     }
 
     const oAttrs = await cadescomMethods.oAtts();
@@ -294,12 +318,17 @@ async function signBase64(thumbprint, base64, type = true, signOption = CAPICOM_
  * @throws {Error}
  * @description подпись строки в формате base64
  */
-async function signFile(thumbprint, base64, type = true, signOption = CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN) {
+async function signFile(
+  thumbprint,
+  base64,
+  type = true,
+  signOption = CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN
+) {
   try {
     if (!thumbprint) {
-      throw new Error('Не указано thumbprint значение сертификата');
-    } else if (typeof thumbprint !== 'string') {
-      throw new Error('Не валидное значение thumbprint сертификата');
+      throw new Error("Не указано thumbprint значение сертификата");
+    } else if (typeof thumbprint !== "string") {
+      throw new Error("Не валидное значение thumbprint сертификата");
     }
 
     const oDateAttrs = await cadescomMethods.oAtts();
@@ -324,6 +353,153 @@ async function signFile(thumbprint, base64, type = true, signOption = CAPICOM_CE
   }
 }
 
+//////////////////////////////////////////
+
+async function _readingFile(file) {
+  return new Promise((resolve, reject) => {
+    try {
+      const blobSlice =
+        File.prototype.slice ||
+        File.prototype.mozSlice ||
+        File.prototype.webkitSlice;
+
+      const chunkSize = 3 * 1024 * 1024; // 3MB
+      const chunks = Math.ceil(file.size / chunkSize);
+      console.warn("chunkSize", chunkSize);
+      console.warn("chunks", chunks);
+      let currentChunk = 0;
+
+      const base64Array = [];
+
+      const frOnload = async function (e) {
+        console.warn("Reading file, part - ", currentChunk);
+
+        const header = ";base64,";
+        const sFileData = e.target.result;
+        const sBase64Data = sFileData.substr(
+          sFileData.indexOf(header) + header.length
+        );
+
+        base64Array.push(sBase64Data);
+
+        currentChunk++;
+
+        if (currentChunk < chunks) {
+          loadNext();
+        } else {
+          //Файл прочитан, процесс подписи
+          resolve(base64Array);
+        }
+      };
+
+      const frOnerror = function () {
+        throw new Error("Ошибка при загрузке файла");
+      };
+
+      const loadNext = function () {
+        const fileReader = new FileReader();
+
+        fileReader.onload = frOnload;
+        fileReader.onerror = frOnerror;
+
+        const start = currentChunk * chunkSize;
+        const end =
+          start + chunkSize >= file.size ? file.size : start + chunkSize;
+
+        fileReader.readAsDataURL(blobSlice.call(file, start, end));
+      };
+
+      loadNext();
+    } catch (error) {
+      reject(error.message);
+    }
+  });
+}
+
+/**
+ * @async
+ * @function getHashByParts
+ * @param {String} thumbprint значение сертификата
+ * @param {Blob} file файл в формате Blob
+ * @param {Boolean} type тип подписи true=откреплённая false=прикреплённая
+ * @throws {Error}
+ * @description Подпись файла с использованием FileAPI и чтением файла по частям, так как Крипто ПРО испытывает проблемы с файлами более 40-50 мб, зависит от характеристик ПК
+ */
+async function getHashByParts(thumbprint, file, type = true) {
+  try {
+    if (!thumbprint) {
+      throw new Error("Не указано thumbprint значение сертификата");
+    } else if (typeof thumbprint !== "string") {
+      throw new Error("Не валидное значение thumbprint сертификата");
+    }
+
+    //Проверяем поддержку FileReader
+    if (!window.FileReader) {
+      throw new Error("File API не поддерживаются в вашем браузере");
+    }
+
+    const fileReader = new FileReader();
+
+    if (typeof fileReader.readAsDataURL !== "function") {
+      throw new Error("Метод readAsDataURL() недоступен в FileReader");
+    }
+
+    const oHashedData = await cadescomMethods.oHashedData();
+    await oHashedData.propset_DataEncoding(CADESCOM_BASE64_TO_BINARY);
+    await oHashedData.propset_Algorithm(
+      CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256
+    );
+
+    const base64Array = await _readingFile(file);
+
+    for (const item of base64Array) {
+      await oHashedData.Hash(item);
+    }
+
+    return await oHashedData;
+  } catch (error) {
+    console.log("catch return");
+    throw new Error(error.message);
+  }
+}
+
+/**
+ * @async
+ * @function signHash
+ * @param {String} thumbprint значение сертификата
+ * @param {String} hashData хеш файла (Гост 3411_2012_512)
+ * @throws {Error}
+ * @description подпись хэш-суммы файла (Гост 3411_2012_512)
+ */
+async function signHash(thumbprint, hashData) {
+  try {
+    if (!thumbprint) {
+      throw new Error("Не указано thumbprint значение сертификата");
+    } else if (typeof thumbprint !== "string") {
+      throw new Error("Не валидное значение thumbprint сертификата");
+    }
+
+    const currentCert = await currentCadesCert(thumbprint);
+
+    const oSigner = await cadescomMethods.oSigner();
+    await oSigner.propset_Certificate(currentCert);
+    await oSigner.propset_CheckCertificate(true);
+
+    const oSignedData = await cadescomMethods.oSignedData();
+
+    const signature = await oSignedData.SignHash(
+      hashData,
+      oSigner,
+      CADESCOM_CADES_BES
+    );
+
+    return signature;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+//////////////////////////////////////////
 
 /**
  * @async
@@ -337,12 +513,16 @@ async function signFile(thumbprint, base64, type = true, signOption = CAPICOM_CE
  * @throws {Error}
  * @description подпись хэш-суммы файла (Гост 3411_2012_512)
  */
-async function signHash512(thumbprint, hash, signOption = CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN) {
+async function signHash512(
+  thumbprint,
+  hash,
+  signOption = CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN
+) {
   try {
     if (!thumbprint) {
-      throw new Error('Не указано thumbprint значение сертификата');
-    } else if (typeof thumbprint !== 'string') {
-      throw new Error('Не валидное значение thumbprint сертификата');
+      throw new Error("Не указано thumbprint значение сертификата");
+    } else if (typeof thumbprint !== "string") {
+      throw new Error("Не валидное значение thumbprint сертификата");
     }
 
     const oDateAttrs = await cadescomMethods.oAtts();
@@ -356,7 +536,9 @@ async function signHash512(thumbprint, hash, signOption = CAPICOM_CERTIFICATE_IN
     await authenticatedAttributes2.Add(oDateAttrs);
 
     const oHashedData = await cadescomMethods.oHashedData();
-    await oHashedData.propset_Algorithm(CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_512);
+    await oHashedData.propset_Algorithm(
+      CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_512
+    );
     await oHashedData.propset_DataEncoding(CADESCOM_BASE64_TO_BINARY);
     await oHashedData.SetHashValue(hash);
 
@@ -382,12 +564,17 @@ async function signHash512(thumbprint, hash, signOption = CAPICOM_CERTIFICATE_IN
  * @throws {Error}
  * @description добавление параллельной подписи (Гост 3411_2012_512)
  */
- async function coSignHash512(thumbprint, hash, signature, signOption = CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN) {
+async function coSignHash512(
+  thumbprint,
+  hash,
+  signature,
+  signOption = CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN
+) {
   try {
     if (!thumbprint) {
-      throw new Error('Не указано thumbprint значение сертификата');
-    } else if (typeof thumbprint !== 'string') {
-      throw new Error('Не валидное значение thumbprint сертификата');
+      throw new Error("Не указано thumbprint значение сертификата");
+    } else if (typeof thumbprint !== "string") {
+      throw new Error("Не валидное значение thumbprint сертификата");
     }
 
     const oDateAttrs = await cadescomMethods.oAtts();
@@ -402,7 +589,9 @@ async function signHash512(thumbprint, hash, signOption = CAPICOM_CERTIFICATE_IN
     await authenticatedAttributes2.Add(oDateAttrs);
 
     const oHashedData = await cadescomMethods.oHashedData();
-    await oHashedData.propset_Algorithm(CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_512);
+    await oHashedData.propset_Algorithm(
+      CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_512
+    );
     await oHashedData.propset_DataEncoding(CADESCOM_BASE64_TO_BINARY);
     await oHashedData.SetHashValue(hash);
 
@@ -410,10 +599,14 @@ async function signHash512(thumbprint, hash, signOption = CAPICOM_CERTIFICATE_IN
     await oSigner.propset_Options(signOption);
 
     oSignedData.VerifyHash(oHashedData, prevSignedMessage, CADESCOM_CADES_BES);
-    const sSignedMessage1 = await oSignedData.CoSignHash(oHashedData, oSigner, CADESCOM_CADES_BES);
-    oSignedData.VerifyHash(oHashedData, sSignedMessage1, CADESCOM_CADES_BES)
+    const sSignedMessage1 = await oSignedData.CoSignHash(
+      oHashedData,
+      oSigner,
+      CADESCOM_CADES_BES
+    );
+    oSignedData.VerifyHash(oHashedData, sSignedMessage1, CADESCOM_CADES_BES);
 
-    return sSignedMessage1
+    return sSignedMessage1;
   } catch (error) {
     throw new Error(error.message);
   }
@@ -431,12 +624,16 @@ async function signHash512(thumbprint, hash, signOption = CAPICOM_CERTIFICATE_IN
  * @throws {Error}
  * @description подпись хэш-суммы файла (Гост 3411_2012_256)
  */
- async function signHash256(thumbprint, hash, signOption = CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN) {
+async function signHash256(
+  thumbprint,
+  hash,
+  signOption = CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN
+) {
   try {
     if (!thumbprint) {
-      throw new Error('Не указано thumbprint значение сертификата');
-    } else if (typeof thumbprint !== 'string') {
-      throw new Error('Не валидное значение thumbprint сертификата');
+      throw new Error("Не указано thumbprint значение сертификата");
+    } else if (typeof thumbprint !== "string") {
+      throw new Error("Не валидное значение thumbprint сертификата");
     }
 
     const oDateAttrs = await cadescomMethods.oAtts();
@@ -450,7 +647,9 @@ async function signHash512(thumbprint, hash, signOption = CAPICOM_CERTIFICATE_IN
     await authenticatedAttributes2.Add(oDateAttrs);
 
     const oHashedData = await cadescomMethods.oHashedData();
-    await oHashedData.propset_Algorithm(CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256);
+    await oHashedData.propset_Algorithm(
+      CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256
+    );
     await oHashedData.propset_DataEncoding(CADESCOM_BASE64_TO_BINARY);
     await oHashedData.SetHashValue(hash);
 
@@ -462,7 +661,6 @@ async function signHash512(thumbprint, hash, signOption = CAPICOM_CERTIFICATE_IN
     throw new Error(error.message);
   }
 }
-
 
 /**
  * @async
@@ -477,12 +675,17 @@ async function signHash512(thumbprint, hash, signOption = CAPICOM_CERTIFICATE_IN
  * @throws {Error}
  * @description добавление параллельной подписи (Гост 3411_2012_256)
  */
- async function coSignHash256(thumbprint, hash, signature, signOption = CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN) {
+async function coSignHash256(
+  thumbprint,
+  hash,
+  signature,
+  signOption = CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN
+) {
   try {
     if (!thumbprint) {
-      throw new Error('Не указано thumbprint значение сертификата');
-    } else if (typeof thumbprint !== 'string') {
-      throw new Error('Не валидное значение thumbprint сертификата');
+      throw new Error("Не указано thumbprint значение сертификата");
+    } else if (typeof thumbprint !== "string") {
+      throw new Error("Не валидное значение thumbprint сертификата");
     }
 
     const oDateAttrs = await cadescomMethods.oAtts();
@@ -497,7 +700,9 @@ async function signHash512(thumbprint, hash, signOption = CAPICOM_CERTIFICATE_IN
     await authenticatedAttributes2.Add(oDateAttrs);
 
     const oHashedData = await cadescomMethods.oHashedData();
-    await oHashedData.propset_Algorithm(CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256);
+    await oHashedData.propset_Algorithm(
+      CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256
+    );
     await oHashedData.propset_DataEncoding(CADESCOM_BASE64_TO_BINARY);
     await oHashedData.SetHashValue(hash);
 
@@ -505,10 +710,14 @@ async function signHash512(thumbprint, hash, signOption = CAPICOM_CERTIFICATE_IN
     await oSigner.propset_Options(signOption);
 
     oSignedData.VerifyHash(oHashedData, prevSignedMessage, CADESCOM_CADES_BES);
-    const sSignedMessage1 = await oSignedData.CoSignHash(oHashedData, oSigner, CADESCOM_CADES_BES);
-    oSignedData.VerifyHash(oHashedData, sSignedMessage1, CADESCOM_CADES_BES)
+    const sSignedMessage1 = await oSignedData.CoSignHash(
+      oHashedData,
+      oSigner,
+      CADESCOM_CADES_BES
+    );
+    oSignedData.VerifyHash(oHashedData, sSignedMessage1, CADESCOM_CADES_BES);
 
-    return sSignedMessage1
+    return sSignedMessage1;
   } catch (error) {
     throw new Error(error.message);
   }
@@ -527,7 +736,9 @@ async function getHash(base64) {
     const oHashedData = await cadescomMethods.oHashedData();
 
     // Алгоритм хэширования нужно указать до того, как будут переданы данные
-    await oHashedData.propset_Algorithm(CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_512);
+    await oHashedData.propset_Algorithm(
+      CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_512
+    );
 
     // Указываем кодировку данных
     // Кодировка должна быть указана до того, как будут переданы сами данные
@@ -555,18 +766,24 @@ async function getHash(base64) {
 async function getSignatureInfo(signedMessage, hash) {
   try {
     const oHashedData = await cadescomMethods.oHashedData();
-    await oHashedData.propset_Algorithm(CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_512);
+    await oHashedData.propset_Algorithm(
+      CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_512
+    );
     await oHashedData.propset_DataEncoding(CADESCOM_BASE64_TO_BINARY);
     await oHashedData.SetHashValue(hash);
 
     const oSignedData = await cadescomMethods.oSignedData();
-    await oSignedData.VerifyHash(oHashedData, signedMessage, CADESCOM_CADES_BES);
+    await oSignedData.VerifyHash(
+      oHashedData,
+      signedMessage,
+      CADESCOM_CADES_BES
+    );
 
     const signers = await oSignedData.Signers;
     const count = await signers.Count;
 
     if (!count) {
-      throw new Error('В подписи отсутствуют данные о подписавших');
+      throw new Error("В подписи отсутствуют данные о подписавших");
     }
 
     const countArray = Array(count).fill(null);
@@ -587,7 +804,9 @@ async function getSignatureInfo(signedMessage, hash) {
             signatureIsValid: await signatureStatus.IsValid,
           });
         } catch (error) {
-          throw new Error(`При переборе подписавших сертификат произошла ошибка: ${error.message}`);
+          throw new Error(
+            `При переборе подписавших сертификат произошла ошибка: ${error.message}`
+          );
         }
       })
     );
@@ -630,7 +849,11 @@ async function verifyBase64(signedMessage, base64, type = true) {
  * @throws {Error}
  * @description подписание XML документа
  */
-async function signXml(thumbprint, xml, cadescomXmlSignatureType = CADESCOM_XML_SIGNATURE_TYPE_ENVELOPED) {
+async function signXml(
+  thumbprint,
+  xml,
+  cadescomXmlSignatureType = CADESCOM_XML_SIGNATURE_TYPE_ENVELOPED
+) {
   try {
     const currentCert = await currentCadesCert(thumbprint);
     const publicKey = await currentCert.PublicKey();
@@ -639,10 +862,7 @@ async function signXml(thumbprint, xml, cadescomXmlSignatureType = CADESCOM_XML_
     const oSigner = await cadescomMethods.oSigner();
     const oSignerXML = await cadescomMethods.oSignedXml();
 
-    const {
-      signAlgorithm,
-      hashAlgorithm
-    } = doXmlSitnatureAlgorithm(value);
+    const { signAlgorithm, hashAlgorithm } = doXmlSitnatureAlgorithm(value);
     const xmlSitnatureType = doXmlSitnatureType(cadescomXmlSignatureType);
 
     await oSigner.propset_Certificate(currentCert);
@@ -678,4 +898,6 @@ export {
   signHash512,
   coSignHash512,
   coSignHash256,
+  signHash,
+  getHashByParts,
 };
